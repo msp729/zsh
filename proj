@@ -1,0 +1,97 @@
+#!/usr/bin/env zsh
+
+if [[ 0 -eq $# ]]
+then
+    for d in $(ls ~/proj)
+    do
+        echo
+        for p in $(ls ~/proj/$d)
+        do
+            if [[ "" != $p ]]
+            then
+                if [[ -d ~/proj/$d/$p ]]
+                then
+
+                    # '\033[0m' clears all effects
+                    # '\033[38;2;R;G;Bm' sets arbitrary rgb colors
+                    # '\033[4m' underlines
+                    # '\033[24m' turns off underline
+                    # '\033[1m' bolds
+                    # '\033[21m' turns off bold
+                    # '38;5;n' and '48;5;n' set fg and bg respectively,
+                    # referring to a 256-color table: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+                    echo -e "\033[38;5;12;1m${(r:20:: :)d}\033[38;5;2m$p/"
+                else
+                    echo -e "\033[38;5;12;1m${(r:20:: :)d}\033[38;5;3m$p"
+                fi
+            fi
+        done
+    done
+
+elif [[ 1 -eq $# ]]
+then
+    for d in $(ls ~/proj)
+    do
+        for p in $(ls ~/proj/$d)
+        do
+            if [[ $1 = $p ]]
+            then
+                if [[ -d ~/proj/$d/$p ]]
+                then # directory
+                    cd ~/proj/$d/$p
+
+                else # file
+                    cd ~/proj/$d
+                    nvim $p
+                fi
+                return # we did it!
+            fi
+        done
+    done
+
+elif [[ 2 -eq $# ]]
+then
+    for d in $(ls ~/proj)
+    do
+        if [[ $1 = $d ]]
+        then
+            for p in $(ls ~/proj/$d)
+            do
+                if [[ $2 = $p ]]
+                then
+                    if [[ -d ~/proj/$d/$p ]]
+                    then # directory
+                        cd ~/proj/$d/$p
+
+                    else # file
+                        cd ~/proj/$d
+                        nvim $p
+                    fi
+                    return # we did it!
+                fi
+            done
+        fi
+    done
+
+elif [[ 3 -eq $# ]]
+then
+    if [[ "n" = $1 ]]
+    then
+        if [[ ! -d ~/proj/$2 ]]
+        then
+            mkdir ~/proj/$2
+        fi
+        mkdir ~/proj/$2/$3
+        cd ~/proj/$2/$3
+
+    elif [[ "f" = $1 ]]
+    then
+        if [[ ! -d ~/proj/$2 ]]
+        then
+            mkdir ~/proj/$1
+        fi
+        touch ~/proj/$2/$3
+        cd ~/proj/$2
+        nvim $3
+    fi
+fi
