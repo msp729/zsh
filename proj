@@ -49,6 +49,15 @@ then
         done
     done
 
+    for d in $(ls ~/proj)
+    do # in case i enter a project group, e.g. `proj zsh` should put me in ~/proj/zsh
+        if [[ $1 = $d ]]
+        then
+            cd ~/proj/$d
+            return
+        fi
+    done
+
 elif [[ 2 -eq $# ]]
 then
     for d in $(ls ~/proj)
@@ -77,19 +86,12 @@ elif [[ 3 -eq $# ]]
 then
     if [[ "n" = $1 ]]
     then
-        if [[ ! -d ~/proj/$2 ]]
-        then
-            mkdir ~/proj/$2
-        fi
-        mkdir ~/proj/$2/$3
+        mkdir -p ~/proj/$2/$3
         cd ~/proj/$2/$3
 
     elif [[ "f" = $1 ]]
     then
-        if [[ ! -d ~/proj/$2 ]]
-        then
-            mkdir ~/proj/$1
-        fi
+        mkdir -p ~/proj/$1
         touch ~/proj/$2/$3
         cd ~/proj/$2
         nvim $3
