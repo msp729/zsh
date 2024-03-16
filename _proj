@@ -7,7 +7,6 @@ do
     for p in $(ls ~/proj/$g)
     do
         projs+=",$p"
-        #projs+=":$g $p"
     done
 done
 projs+=')'
